@@ -17,5 +17,5 @@ jobs:
           # Loop through each version and run signtool /?
           foreach ($signtool_path in $signtool_paths) {
             echo "Running signtool /? for $signtool_path"
-            & $signtool_path /?
+            & $signtool_path sign /?
           }
