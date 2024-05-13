@@ -11,8 +11,8 @@ jobs:
       - name: Find and Run SignTool Versions
         id: find-and-run-signtool-versions
         run: |
-          # Find all versions of signtool.exe in the folder
-          $signtool_paths = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Recurse -Filter signtool.exe | Select-Object -ExpandProperty FullName
+          # Find all versions of signtool.exe in the folder, excluding 'arm' architecture
+          $signtool_paths = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Recurse -Filter signtool.exe | Where-Object { $_.FullName -notmatch 'arm' } | Select-Object -ExpandProperty FullName
 
           # Loop through each version and run signtool /?
           foreach ($signtool_path in $signtool_paths) {
