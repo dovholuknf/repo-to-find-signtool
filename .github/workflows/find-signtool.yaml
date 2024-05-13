@@ -1,14 +1,32 @@
-name: List Program Files Directory
+name: Find signtool
 
 on:
   workflow_dispatch:
 
 jobs:
-  list-program-files:
+  find-signtool:
     runs-on: windows-latest
 
     steps:
-      - name: List Program Files Directory
-        id: list-program-files
+      - name: Find signtool
+        id: find-signtool
         run: |
-          Get-ChildItem "C:\Program Files" -Recurse | Where-Object {$_.FullName -like "*signtool*" -or $_.FullName -like "*Signtool*"} | Select-Object FullName
+          # Search for signtool.exe in Windows SDK directories
+          $sdk_versions = "10.0.17763.0", "10.0.19041.0", "10.0.20348.0", "10.0.22000.0", "10.0.22621.0"
+          $signtool_path = $null
+          foreach ($sdk_version in $sdk_versions) {
+            $x64_path = "C:\Program Files (x86)\Windows Kits\10\bin\$sdk_version\x64\signtool.exe"
+            $x86_path = "C:\Program Files (x86)\Windows Kits\10\bin\$sdk_version\x86\signtool.exe"
+            if (Test-Path $x64_path) {
+              $signtool_path = $x64_path
+              break
+            } elseif (Test-Path $x86_path) {
+              $signtool_path = $x86_path
+              break
+            }
+          }
+          # Output the path of signtool.exe
+          echo "::set-output name=signtool_path::$signtool_path"
+      
+      - name: Print signtool path
+        run: echo "Found signtool.exe at ${{ steps.find-signtool.outputs.signtool_path }}"
