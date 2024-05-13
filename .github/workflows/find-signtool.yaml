@@ -1,21 +1,14 @@
-name: Find signtool
+name: List Program Files Directory
 
 on:
   workflow_dispatch:
 
 jobs:
-  find-signtool:
+  list-program-files:
     runs-on: windows-latest
 
     steps:
-      - name: Find signtool
-        id: find-signtool
+      - name: List Program Files Directory
+        id: list-program-files
         run: |
-          # Search for signtool.exe in common locations
-          $signtool_path = Get-Command -Name signtool.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
-
-          # Output the path of signtool.exe
-          echo "::set-output name=signtool_path::$signtool_path"
-      
-      - name: Print signtool path
-        run: echo "Found signtool.exe at ${{ steps.find-signtool.outputs.signtool_path }}"
+          Get-ChildItem "C:\Program Files" -Recurse | Select-Object FullName
