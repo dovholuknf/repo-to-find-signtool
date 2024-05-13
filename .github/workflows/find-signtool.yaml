@@ -11,4 +11,4 @@ jobs:
       - name: List Program Files Directory
         id: list-program-files
         run: |
-          Get-ChildItem "C:\Program Files" -Recurse | Select-Object FullName
+          Get-ChildItem "C:\Program Files" -Recurse | Where-Object {$_.FullName -like "*signtool*" -or $_.FullName -like "*Signtool*"} | Select-Object FullName
